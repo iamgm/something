@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oops! Something went wrong...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        .crack {
+            position: absolute;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white h-screen overflow-hidden flex items-center justify-center">
+    <div id="cracks-container" class="fixed top-0 left-0 w-full h-full pointer-events-none"></div>
+    
+    <div id="error-screen" class="bg-gray-800 rounded-lg p-8 max-w-md mx-4 text-center relative overflow-hidden border border-red-500 shadow-lg">
+        <div class="absolute top-0 left-0 w-full h-full bg-red-500 opacity-5 pointer-events-none"></div>
+        
+        <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4 shake"></i>
+        <h1 class="text-2xl font-bold mb-2">CRITICAL DISPLAY ERROR</h1>
+        <p class="text-gray-300 mb-4">We've detected multiple cracks on your screen!</p>
+        <div class="bg-gray-700 rounded p-4 mb-6 text-left">
+            <p class="text-sm mb-2"><span class="font-semibold">Error Code:</span> SCREEN_CRACK_0410</p>
+            <p class="text-sm"><span class="font-semibold">Diagnosis:</span> Physical damage detected</p>
+        </div>
+        
+        <div class="mb-6">
+            <p class="text-gray-400 text-sm mb-3">Recommended actions:</p>
+            <div class="flex flex-col gap-2">
+                <button class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2 transition">
+                    <i class="fas fa-wrench"></i> Run screen repair tool
+                </button>
+                <button class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2 transition">
+                    <i class="fas fa-info-circle"></i> View warranty information
+                </button>
+            </div>
+        </div>
+        
+        <p class="text-xs text-gray-500">If this is a hardware issue, please contact your device manufacturer.</p>
+    </div>
+    
+    <div id="prank-reveal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-10">
+        <div class="bg-gray-800 rounded-lg p-8 max-w-md mx-4 text-center">
+            <i class="fas fa-laugh-wink text-yellow-400 text-5xl mb-4"></i>
+            <h1 class="text-2xl font-bold mb-2">April Fools! 🎉</h1>
+            <p class="text-gray-300 mb-6">Your screen is perfectly fine! Hope we gave you a little scare there.</p>
+            <button id="close-prank" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-6 rounded-full transition">
+                Got me! Close this
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Create cracks on the screen
+        function createCracks() {
+            const container = document.getElementById('cracks-container');
+            const crackCount = 10;
+            
+            for (let i = 0; i < crackCount; i++) {
+                const crack = document.createElement('div');
+                crack.className = 'crack';
+                
+                // Random position and size
+                const size = 100 + Math.random() * 200;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                
+                crack.style.width = `${size}px`;
+                crack.style.height = `${size}px`;
+                crack.style.left = `${left}%`;
+                crack.style.top = `${top}%`;
+                
+                container.appendChild(crack);
+            }
+        }
+        
+        // Make the error message interactive
+        document.querySelectorAll('#error-screen button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (this.textContent.includes('repair tool')) {
+                    this.innerHTML = '<i class="fas fa-cog fa-spin mr-2"></i> Repairing...';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Repair failed';
+                        this.classList.remove('bg-red-600', 'hover:bg-red-700');
+                        this.classList.add('bg-gray-600', 'cursor-not-allowed');
+                    }, 2000);
+                } else {
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Loading...';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Page not found';
+                        this.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+                        this.classList.add('bg-gray-600', 'cursor-not-allowed');
+                    }, 2000);
+                }
+                
+                // Show reveal after some time
+                setTimeout(() => {
+                    document.getElementById('prank-reveal').classList.remove('hidden');
+                }, 5000);
+            });
+        });
+        
+        // Close the prank
+        document.getElementById('close-prank').addEventListener('click', function() {
+            document.getElementById('prank-reveal').classList.add('hidden');
+        });
+        
+        // Create cracks when page loads
+        window.addEventListener('load', function() {
+            // Initial delay for more impact
+            setTimeout(() => {
+                createCracks();
+                
+                // Make the error message shake periodically
+                setInterval(() => {
+                    const errorScreen = document.getElementById('error-screen');
+                    errorScreen.classList.add('shake');
+                    setTimeout(() => errorScreen.classList.remove('shake'), 1000);
+                }, 8000);
+            }, 1000);
+        });
+        
+        // Easter egg - try to touch the cracks
+        document.getElementById('cracks-container').addEventListener('click', function() {
+            document.getElementById('prank-reveal').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
