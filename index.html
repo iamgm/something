@@ -229,13 +229,8 @@
         }
         
         // Create random popups
-        function createPopup() {
+        function createPopup(isCritical = false) {
             const popups = [
-                {
-                    title: "CRITICAL SYSTEM ALERT", 
-                    message: "Your personal files have been encrypted!\n\nTo recover your data, you must pay the ransom of 0.5 BTC.\n\nTime remaining: 14:32",
-                    buttons: ["Try Decrypt", "Pay Now"]
-                },
                 {
                     title: "PROCESS ALERT", 
                     message: "svchost.exe is attempting to access your\n\n• Browser passwords\n• Credit card data\n• Private photos\n\nBLOCK THIS PROCESS?",
@@ -253,7 +248,11 @@
                 }
             ];
             
-            const popupData = popups[Math.floor(Math.random() * popups.length)];
+            const popupData = isCritical ? {
+                title: "CRITICAL SYSTEM ALERT", 
+                message: "Your personal files have been encrypted!\n\nTo recover your data, you must pay the ransom of 0.5 BTC.\n\nTime remaining: 14:32",
+                buttons: ["Try Decrypt", "Pay Now"]
+            } : popups[Math.floor(Math.random() * popups.length)];
             
             const popup = document.createElement('div');
             popup.className = 'popup';
@@ -350,13 +349,18 @@
             startCountdown();
             typeTerminalLines();
             
-            // Create initial popups
-            setTimeout(createPopup, 4000);
-            setTimeout(createPopup, 8000);
-            setTimeout(createPopup, 12000);
+            // Create first two regular popups
+            setTimeout(() => createPopup(), 4000);
+            setTimeout(() => createPopup(), 8000);
+            
+            // Create critical alert at random time after 10 seconds
+            setTimeout(() => {
+                const randomDelay = Math.floor(Math.random() * 10000) + 10000; // Random delay between 10-20 seconds
+                setTimeout(() => createPopup(true), randomDelay);
+            }, 10000);
             
             // Keep creating new popups
-            setInterval(createPopup, 15000);
+            setInterval(() => createPopup(), 15000);
             
             // Easter egg - press ESC to reveal early
             document.addEventListener('keydown', function(e) {
