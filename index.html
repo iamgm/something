@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRITICAL SYSTEM ALERT</title>
+    <title>SYSTEM ALERT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @keyframes glitch {
             0% { transform: translate(0); }
-            20% { transform: translate(-5px, 5px); }
-            40% { transform: translate(-5px, -5px); }
-            60% { transform: translate(5px, 5px); }
-            80% { transform: translate(5px, -5px); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
             100% { transform: translate(0); }
         }
         @keyframes flicker {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 22%, 24%, 55% { opacity: 0.2; }
+            20%, 22%, 24%, 55% { opacity: 0.6; }
         }
         @keyframes scanline {
             0% { background-position: 0 0; }
             100% { background-position: 0 100vh; }
         }
         .glitch-effect {
-            animation: glitch 0.5s linear infinite;
+            animation: glitch 0.8s linear infinite;
         }
         .flicker {
-            animation: flicker 5s linear infinite;
+            animation: flicker 8s linear infinite;
         }
         .scanlines {
             position: fixed;
@@ -40,192 +40,280 @@
                 transparent 50%,
                 rgba(0, 255, 0, 0.05) 50%
             );
-            background-size: 100% 4px;
-            animation: scanline 1s linear infinite;
+            background-size: 100% 3px;
+            animation: scanline 1.5s linear infinite;
             pointer-events: none;
             z-index: 9999;
             mix-blend-mode: overlay;
         }
-        .matrix-rain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            z-index: 9998;
-            opacity: 0.3;
-            pointer-events: none;
+        .terminal-output {
+            height: 300px;
+            overflow-y: auto;
+            background-color: rgba(0, 15, 0, 0.8);
+            border: 1px solid #004400;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        .terminal-output::-webkit-scrollbar {
+            width: 5px;
+        }
+        .terminal-output::-webkit-scrollbar-thumb {
+            background: #00aa00;
         }
         .popup {
             position: fixed;
-            border: 2px solid red;
+            border: 1px solid red;
             background: #111;
-            box-shadow: 0 0 20px red;
+            box-shadow: 0 0 15px red;
             z-index: 10000;
+            min-width: 300px;
         }
-        .virus-file {
-            position: absolute;
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px dashed red;
-            z-index: 9997;
+        .window-header {
+            background: linear-gradient(to right, #700000, #400000);
+            padding: 5px 10px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-bar {
+            background: #001100;
+            padding: 3px 10px;
+            font-size: 12px;
+            color: #00ff00;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cmd-input {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .cmd-prompt {
+            color: #00ff00;
+            margin-right: 5px;
+        }
+        .cmd-line {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            flex-grow: 1;
+            outline: none;
+        }
+        .blink {
+            animation: blink-animation 1s steps(2, start) infinite;
+        }
+        @keyframes blink-animation {
+            to { visibility: hidden; }
         }
     </style>
 </head>
-<body class="bg-black text-green-500 font-mono overflow-hidden" style="text-shadow: 0 0 5px #00ff00;">
-    <!-- Matrix rain effect -->
-    <canvas id="matrix" class="matrix-rain"></canvas>
-    
+<body class="bg-black text-green-500 font-mono overflow-hidden" style="text-shadow: 0 0 2px #00ff00;">
     <!-- Scanlines effect -->
     <div class="scanlines"></div>
     
-    <!-- Main virus warning -->
-    <div id="main-warning" class="fixed inset-0 flex items-center justify-center p-4 z-10000">
-        <div class="bg-black border-4 border-red-500 p-6 max-w-2xl flicker relative">
-            <div class="absolute top-0 left-0 w-full h-full bg-red-500 opacity-5 pointer-events-none"></div>
-            <div class="glitch-effect">
-                <h1 class="text-3xl font-bold mb-4 text-red-500">!!! VIRUS DETECTED !!!</h1>
-                <div class="text-xl mb-6">
-                    <p>> SYSTEM COMPROMISED</p>
-                    <p>> CRITICAL FILES ENCRYPTED</p>
-                    <p>> PERSONAL DATA LEAKED</p>
-                </div>
-                <div class="bg-gray-900 p-4 mb-6 text-red-400 border border-red-900">
-                    <p class="mb-2">> Threat: Trojan-Ransom.Win32.CRYPTOR</p>
-                    <p class="mb-2">> Encryption: AES-256 + RSA-2048</p>
-                    <p>> Files affected: 12,487</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <button id="pay-ransom" class="bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded flex items-center justify-center gap-2 transition border border-red-900">
-                        <i class="fas fa-coins"></i> PAY RANSOM (0.5 BTC)
-                    </button>
-                    <button id="decrypt" class="bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded flex items-center justify-center gap-2 transition border border-green-900">
-                        <i class="fas fa-key"></i> TRY DECRYPT
-                    </button>
-                </div>
-                <div class="mt-4 text-xs text-gray-500">
-                    <p>> Time remaining: <span id="countdown">04:59</span></p>
-                </div>
-            </div>
+    <!-- Main terminal interface -->
+    <div class="container mx-auto p-4 max-w-4xl mt-10">
+        <div class="terminal-output" id="terminal">
+            <div>> Initializing system diagnostics...</div>
+            <div>> Checking file integrity...</div>
+            <div class="text-red-500">> [!] CRITICAL ALERT: MALWARE DETECTED</div>
+            <div>> Scanning directory: C:\Users\$USER\Documents</div>
+            <div class="text-red-500">> 486 files compromised - ENCRYPTED</div>
+            <div>> Scanning directory: C:\Users\$USER\Pictures</div>
+            <div class="text-red-500">> 324 files compromised - ENCRYPTED</div>
+            <div>> Scanning directory: C:\Users\$USER\Desktop</div>
+            <div class="text-red-500">> 142 files compromised - ENCRYPTED</div>
+            <div class="my-3">--------------------------------------------------</div>
+            <div>> <span class="font-bold">TROJAN IDENTIFIED:</span> W32/RansomCrypt.A!tr</div>
+            <div>> <span class="font-bold">ENCRYPTION:</span> AES-256 + RSA-2048</div>
+            <div>> <span class="font-bold">DEMAND:</span> 0.5 BTC (~$15,000 USD)</div>
+            <div>> <span class="font-bold">DUE IN:</span> <span id="countdown">14:59</span></div>
+            <div class="my-3">--------------------------------------------------</div>
+            <div>> To recover your files, you must pay the ransom.</div>
+            <div>> After payment, decryption key will be provided.</div>
+            <div>> <span class="text-yellow-500">WARNING: Attempting removal may cause permanent data loss</span></div>
+        </div>
+        
+        <div class="cmd-input">
+            <span class="cmd-prompt">C:\WINDOWS\system32\></span>
+            <input type="text" class="cmd-line" id="command-input" value="sipkey_decrypt --force --bypass" readonly>
+            <span class="blink">|</span>
+        </div>
+        
+        <div class="status-bar mt-2">
+            <span>ENCRYPTION IN PROGRESS</span>
+            <span>ADMIN: SYSTEM</span>
+            <span>12,487 FILES AFFECTED</span>
         </div>
     </div>
     
     <!-- Fake system popups -->
     <div id="popups-container"></div>
     
-    <!-- Fake virus files -->
-    <div id="virus-files-container"></div>
-    
     <!-- April Fools reveal -->
     <div id="prank-reveal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-10001">
-        <div class="bg-black border-4 border-yellow-500 p-8 max-w-2xl text-center">
+        <div class="bg-black border-2 border-yellow-500 p-8 max-w-2xl text-center">
             <i class="fas fa-grin-tears text-yellow-400 text-6xl mb-6"></i>
-            <h1 class="text-4xl font-bold mb-4 text-yellow-400">APRIL FOOLS!</h1>
+            <h1 class="text-4xl font-bold mb-4 text-yellow-400">GOTCHA!</h1>
             <p class="text-xl mb-6">Your computer is perfectly safe! 😂</p>
             <p class="text-lg mb-8">This was just a harmless prank - no files were touched and no data was collected.</p>
-            <button id="close-prank" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-8 rounded-full transition text-lg">
-                HA HA, VERY FUNNY!
+            <button id="close-prank" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-8 rounded transition text-lg">
+                HA HA, VERY FUNNY! CLOSE THIS
             </button>
         </div>
     </div>
 
     <script>
-        // Matrix rain effect
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
-        
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const rainDrops = [];
-        
-        for (let x = 0; x < columns; x++) {
-            rainDrops[x] = 1;
+        // Terminal typing effect
+        function typeTerminalLines() {
+            const terminal = document.getElementById('terminal');
+            const lines = [
+                {text: "> Attempting ransomware removal...", delay: 2000},
+                {text: "> Running anti-malware toolscan...", delay: 1500},
+                {text: "> [!] FAILED: Unable to bypass encryption", delay: 1800, class: "text-red-500"},
+                {text: "> [!] WARNING: Some files may be corrupted by this attempt", delay: 2000, class: "text-yellow-500"},
+                {text: "> Scanning network connections...", delay: 2000},
+                {text: "> [!] REMOTE CONNECTION DETECTED: 185.143.223.47 (Russian Federation)", delay: 2500, class: "text-red-500"},
+                {text: "> Attempting to isolate threat...", delay: 1500},
+                {text: "> [!] FAILED: Connection persists", delay: 1800, class: "text-red-500"},
+                {text: "> Contacting decryption service...", delay: 2000},
+                {text: "> Response received: Payment required within time limit", delay: 2500},
+                {text: "> SYSTEM RECOMMENDATION: PAY RANSOM TO RECOVER FILES", delay: 3000, class: "text-red-500 font-bold"}
+            ];
+            
+            let currentIndex = 0;
+            
+            function typeNextLine() {
+                if (currentIndex >= lines.length) return;
+                
+                const line = lines[currentIndex];
+                const lineElement = document.createElement('div');
+                if (line.class) lineElement.className = line.class;
+                lineElement.textContent = line.text;
+                terminal.appendChild(lineElement);
+                terminal.scrollTop = terminal.scrollHeight;
+                
+                currentIndex++;
+                setTimeout(typeNextLine, line.delay);
+            }
+            
+            setTimeout(typeNextLine, 3000);
         }
         
-        const draw = () => {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Countdown timer
+        function startCountdown() {
+            let minutes = 14;
+            let seconds = 59;
             
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
-            
-            for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+            const timer = setInterval(() => {
+                document.getElementById('countdown').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    rainDrops[i] = 0;
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(timer);
+                        // Show "too late" message
+                        document.getElementById('countdown').textContent = "TIME EXPIRED!";
+                        document.getElementById('countdown').className = "text-red-500 blink";
+                    } else {
+                        minutes--;
+                        seconds = 59;
+                    }
+                } else {
+                    seconds--;
                 }
-                rainDrops[i]++;
-            }
-        };
-        
-        setInterval(draw, 30);
+            }, 1000);
+        }
         
         // Create random popups
         function createPopup() {
             const popups = [
-                "WARNING: System integrity compromised!",
-                "CRITICAL: Personal files encrypted!",
-                "ALERT: Bitcoin wallet detected!",
-                "VIRUS: Your passwords are being stolen!",
-                "EMERGENCY: Webcam activated by hacker!",
-                "DANGER: All photos will be deleted in 5 minutes!",
-                "WARNING: Your location has been shared!"
+                {
+                    title: "CRITICAL SYSTEM ALERT", 
+                    message: "Your personal files have been encrypted!\n\nTo recover your data, you must pay the ransom of 0.5 BTC.\n\nTime remaining: 14:32",
+                    buttons: ["Try Decrypt", "Pay Now"]
+                },
+                {
+                    title: "PROCESS ALERT", 
+                    message: "svchost.exe is attempting to access your\n\n• Browser passwords\n• Credit card data\n• Private photos\n\nBLOCK THIS PROCESS?",
+                    buttons: ["Allow", "Block"]
+                },
+                {
+                    title: "NETWORK SECURITY WARNING", 
+                    message: "Your webcam has been activated remotely!\n\n185.143.223.47 (Russian Federation) is streaming from your device.",
+                    buttons: ["Disable Camera", "Ignore"]
+                },
+                {
+                    title: "FILE RECOVERY FAILED", 
+                    message: "Attempt to decrypt 3 documents failed!\n\nFiles have been permanently corrupted.",
+                    buttons: ["OK"]
+                }
             ];
+            
+            const popupData = popups[Math.floor(Math.random() * popups.length)];
             
             const popup = document.createElement('div');
             popup.className = 'popup';
-            popup.style.width = `${300 + Math.random() * 200}px`;
-            popup.style.top = `${50 + Math.random() * 30}%`;
-            popup.style.left = `${10 + Math.random() * 70}%`;
+            popup.style.top = `${10 + Math.random() * 60}%`;
+            popup.style.left = `${10 + Math.random() * 60}%`;
             
-            const title = document.createElement('div');
-            title.className = 'bg-red-900 text-white p-2 font-bold';
-            title.textContent = 'SYSTEM ALERT';
+            const header = document.createElement('div');
+            header.className = 'window-header';
+            header.innerHTML = `
+                <span>${popupData.title}</span>
+                <span><i class="fas fa-times"></i></span>
+            `;
             
             const content = document.createElement('div');
-            content.className = 'p-4';
-            content.textContent = popups[Math.floor(Math.random() * popups.length)];
+            content.className = 'p-4 text-sm';
+            content.style.whiteSpace = 'pre-line';
+            content.textContent = popupData.message;
             
-            const buttons = document.createElement('div');
-            buttons.className = 'flex justify-end p-2 gap-2';
+            const footer = document.createElement('div');
+            footer.className = 'flex justify-end p-2 gap-2';
             
-            const okBtn = document.createElement('button');
-            okBtn.className = 'px-3 py-1 bg-gray-700 hover:bg-gray-600';
-            okBtn.textContent = 'OK';
-            okBtn.onclick = function() {
-                popup.remove();
-            };
+            popupData.buttons.forEach(btnText => {
+                const btn = document.createElement('button');
+                btn.className = 'px-3 py-1 text-sm';
+                
+                if (btnText === 'Pay Now' || btnText === 'Try Decrypt') {
+                    btn.className += ' bg-red-700 hover:bg-red-600';
+                    btn.onclick = function() {
+                        document.getElementById('prank-reveal').classList.remove('hidden');
+                        popup.remove();
+                    };
+                } else {
+                    btn.className += ' bg-gray-700 hover:bg-gray-600';
+                }
+                
+                btn.textContent = btnText;
+                btn.onclick = function() {
+                    // All buttons remove the popup
+                    if (btnText === 'Pay Now' || btnText === 'Try Decrypt') {
+                        document.getElementById('prank-reveal').classList.remove('hidden');
+                    }
+                    popup.remove();
+                };
+                
+                footer.appendChild(btn);
+            });
             
-            const cancelBtn = document.createElement('button');
-            cancelBtn.className = 'px-3 py-1 bg-red-700 hover:bg-red-600';
-            cancelBtn.textContent = 'Cancel';
-            cancelBtn.onclick = function() {
-                popup.remove();
-            };
-            
-            buttons.appendChild(okBtn);
-            buttons.appendChild(cancelBtn);
-            
-            popup.appendChild(title);
+            popup.appendChild(header);
             popup.appendChild(content);
-            popup.appendChild(buttons);
+            popup.appendChild(footer);
             
             document.getElementById('popups-container').appendChild(popup);
             
-            // Make popup draggable
+            // Make header draggable
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            title.onmousedown = dragMouseDown;
+            header.onmousedown = dragMouseDown;
             
             function dragMouseDown(e) {
+                if (e.target.tagName === 'I') return; // Don't drag when clicking X
+                
                 e = e || window.event;
                 e.preventDefault();
                 pos3 = e.clientX;
@@ -251,106 +339,23 @@
             }
         }
         
-        // Create fake virus files
-        function createVirusFile() {
-            const file = document.createElement('div');
-            file.className = 'virus-file';
-            file.style.width = `${100 + Math.random() * 150}px`;
-            file.style.height = `${20 + Math.random() * 30}px`;
-            file.style.top = `${10 + Math.random() * 80}%`;
-            file.style.left = `${10 + Math.random() * 80}%`;
-            
-            const extensions = ['.exe', '.dll', '.bat', '.vbs', '.scr', '.crypt', '.encrypted'];
-            const prefixes = ['system32_', 'important_', 'personal_', 'backup_', 'photo_', 'document_', 'finance_'];
-            const filename = prefixes[Math.floor(Math.random() * prefixes.length)] + 
-                            Math.floor(1000 + Math.random() * 9000) + 
-                            extensions[Math.floor(Math.random() * extensions.length)];
-            
-            file.innerHTML = `
-                <div class="p-1 text-xs">
-                    <i class="fas fa-file text-red-500 mr-1"></i>
-                    <span class="text-red-400">${filename}</span>
-                </div>
-            `;
-            
-            document.getElementById('virus-files-container').appendChild(file);
-        }
-        
-        // Countdown timer
-        function startCountdown() {
-            let minutes = 4;
-            let seconds = 59;
-            
-            const timer = setInterval(() => {
-                document.getElementById('countdown').textContent = 
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
-                if (seconds === 0) {
-                    if (minutes === 0) {
-                        clearInterval(timer);
-                        // Show "too late" message
-                        document.getElementById('countdown').textContent = "TOO LATE!";
-                        document.getElementById('countdown').classList.add('text-red-500', 'blink');
-                    } else {
-                        minutes--;
-                        seconds = 59;
-                    }
-                } else {
-                    seconds--;
-                }
-            }, 1000);
-        }
-        
-        // Button interactions
-        document.getElementById('pay-ransom').addEventListener('click', function() {
-            this.innerHTML = '<i class="fas fa-cog fa-spin mr-2"></i> CONNECTING TO DARKNET...';
-            setTimeout(() => {
-                this.innerHTML = '<i class="fas fa-unlock-alt mr-2"></i> PAYMENT FAILED!';
-                this.classList.remove('bg-red-600', 'hover:bg-red-700');
-                this.classList.add('bg-gray-700', 'cursor-not-allowed');
-            }, 3000);
-            
-            // Show reveal after delay
-            setTimeout(() => {
-                document.getElementById('prank-reveal').classList.remove('hidden');
-            }, 6000);
-        });
-        
-        document.getElementById('decrypt').addEventListener('click', function() {
-            this.innerHTML = '<i class="fas fa-cog fa-spin mr-2"></i> DECRYPTING FILES...';
-            setTimeout(() => {
-                this.innerHTML = '<i class="fas fa-lock mr-2"></i> DECRYPTION FAILED!';
-                this.classList.remove('bg-green-600', 'hover:bg-green-700');
-                this.classList.add('bg-gray-700', 'cursor-not-allowed');
-            }, 3000);
-            
-            // Show reveal after delay
-            setTimeout(() => {
-                document.getElementById('prank-reveal').classList.remove('hidden');
-            }, 6000);
-        });
-        
         // Close prank
         document.getElementById('close-prank').addEventListener('click', function() {
             document.getElementById('prank-reveal').classList.add('hidden');
-            document.getElementById('main-warning').classList.add('hidden');
-            document.getElementById('popups-container').innerHTML = '';
-            document.getElementById('virus-files-container').innerHTML = '';
         });
         
         // Initialize everything
         window.addEventListener('load', function() {
             startCountdown();
+            typeTerminalLines();
             
-            // Create initial popups and files
-            for (let i = 0; i < 5; i++) {
-                setTimeout(createPopup, i * 2000);
-                setTimeout(createVirusFile, i * 1500);
-            }
+            // Create initial popups
+            setTimeout(createPopup, 4000);
+            setTimeout(createPopup, 8000);
+            setTimeout(createPopup, 12000);
             
-            // Keep creating new popups and files
-            setInterval(createPopup, 8000);
-            setInterval(createVirusFile, 5000);
+            // Keep creating new popups
+            setInterval(createPopup, 15000);
             
             // Easter egg - press ESC to reveal early
             document.addEventListener('keydown', function(e) {
