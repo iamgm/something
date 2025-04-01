@@ -23,27 +23,11 @@
             0% { background-position: 0 0; }
             100% { background-position: 0 100vh; }
         }
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
         .glitch-effect {
             animation: glitch 0.8s linear infinite;
         }
         .flicker {
-            animation: flicker 5s linear infinite;
-        }
-        .shake {
-            animation: shake 0.5s linear infinite;
+            animation: flicker 8s linear infinite;
         }
         .scanlines {
             position: fixed;
@@ -57,7 +41,7 @@
                 rgba(0, 255, 0, 0.05) 50%
             );
             background-size: 100% 3px;
-            animation: scanline 1s linear infinite;
+            animation: scanline 1.5s linear infinite;
             pointer-events: none;
             z-index: 9999;
             mix-blend-mode: overlay;
@@ -119,96 +103,50 @@
             outline: none;
         }
         .blink {
-            animation: blink-animation 0.5s steps(2, start) infinite;
+            animation: blink-animation 1s steps(2, start) infinite;
         }
         @keyframes blink-animation {
             to { visibility: hidden; }
         }
-        @keyframes red-flash {
-            0% { filter: none; }
-            50% { filter: sepia(1) saturate(10) hue-rotate(-10deg) brightness(0.8); }
-            100% { filter: none; }
-        }
-        .red-flash {
-            animation: red-flash 2s linear infinite;
-        }
-        .error-noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.15),
-                rgba(0, 0, 0, 0.15) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            background-size: 100% 10px;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 9998;
-        }
-        .error-pixelate {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi+P//PwM6YGLAAswKXAEgwADS8CmHy1mD1AAAAABJRU5ErkJggg==');
-            background-repeat: repeat;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 9997;
-        }
-        .static-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 100%);
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 9996;
-        }
     </style>
 </head>
 <body class="bg-black text-green-500 font-mono overflow-hidden" style="text-shadow: 0 0 2px #00ff00;">
-    <!-- Screen effects -->
+    <!-- Scanlines effect -->
     <div class="scanlines"></div>
-    <div class="error-noise" id="error-noise"></div>
-    <div class="error-pixelate" id="error-pixelate"></div>
-    <div class="static-overlay" id="static-overlay"></div>
     
     <!-- Main terminal interface -->
-    <div class="container mx-auto p-4 max-w-4xl mt-10" id="main-terminal">
+    <div class="container mx-auto p-4 max-w-4xl mt-10">
         <div class="terminal-output" id="terminal">
-            <div>> HARDWARE ANOMALY DETECTED</div>
-            <div>> Running emergency diagnostics...</div>
-            <div class="text-red-500">> [!!] UNAUTHORIZED ACCESS DETECTED</div>
-            <div>> Establishing secure connection... FAILED</div>
-            <div>> Scanning system memory...</div>
-            <div class="text-red-500">> MALICIOUS PROCESS: svchost_encrypt.exe (PID: 4872)</div>
-            <div>> Attempting process termination...</div>
-            <div class="text-red-500">> FAILED: Access denied</div>
+            <div>> Initializing system diagnostics...</div>
+            <div>> Checking file integrity...</div>
+            <div class="text-red-500">> [!] CRITICAL ALERT: MALWARE DETECTED</div>
+            <div>> Scanning directory: C:\Users\$USER\Documents</div>
+            <div class="text-red-500">> 486 files compromised - ENCRYPTED</div>
+            <div>> Scanning directory: C:\Users\$USER\Pictures</div>
+            <div class="text-red-500">> 324 files compromised - ENCRYPTED</div>
+            <div>> Scanning directory: C:\Users\$USER\Desktop</div>
+            <div class="text-red-500">> 142 files compromised - ENCRYPTED</div>
             <div class="my-3">--------------------------------------------------</div>
-            <div class="text-red-500">> ALERT: FILES ARE BEING ENCRYPTED IN REAL-TIME</div>
-            <div>> Directory: C:\Users\$USER\Documents</div>
-            <div class="text-red-500 blink">> Encryption Status: ACTIVE [███░░░░░░░ 30%]</div>
+            <div>> <span class="font-bold">TROJAN IDENTIFIED:</span> W32/RansomCrypt.A!tr</div>
+            <div>> <span class="font-bold">ENCRYPTION:</span> AES-256 + RSA-2048</div>
+            <div>> <span class="font-bold">DEMAND:</span> 0.5 BTC (~$15,000 USD)</div>
+            <div>> <span class="font-bold">DUE IN:</span> <span id="countdown">14:59</span></div>
+            <div class="my-3">--------------------------------------------------</div>
+            <div>> To recover your files, you must pay the ransom.</div>
+            <div>> After payment, decryption key will be provided.</div>
+            <div>> <span class="text-yellow-500">WARNING: Attempting removal may cause permanent data loss</span></div>
         </div>
         
         <div class="cmd-input">
             <span class="cmd-prompt">C:\WINDOWS\system32\></span>
-            <input type="text" class="cmd-line" id="command-input" value="run --anti_malware --force_scan" readonly>
+            <input type="text" class="cmd-line" id="command-input" value="sipkey_decrypt --force --bypass" readonly>
             <span class="blink">|</span>
         </div>
         
         <div class="status-bar mt-2">
-            <span class="blink">SYSTEM BREACHED</span>
-            <span>ADMIN: LOCKED OUT</span>
-            <span>FILES ENCRYPTING: 1,342/25,891</span>
+            <span>ENCRYPTION IN PROGRESS</span>
+            <span>ADMIN: SYSTEM</span>
+            <span>12,487 FILES AFFECTED</span>
         </div>
     </div>
     
@@ -229,61 +167,22 @@
     </div>
 
     <script>
-        // Dramatic effects that start immediately
-        function startDramaticEffects() {
-            // Initial quick flicker
-            document.body.classList.add('flicker');
-            setTimeout(() => {
-                document.body.classList.remove('flicker');
-            }, 500);
-            
-            // Random system messages at the beginning
-            const initialMessages = [
-                {text: "> WARNING: CPU temperature critical (98°C)", delay: 500},
-                {text: "> [!] Unknown device connected: USB Port 3", delay: 500, class: "text-yellow-500"},
-                {text: "> [!] Memory leak detected in system32.dll", delay: 500, class: "text-red-500"},
-                {text: "> Scanning for rootkits...", delay: 800},
-                {text: "> [!] Suspicious network activity detected", delay: 800, class: "text-red-500"},
-                {text: "> Attempting to contact security server...", delay: 1000},
-                {text: "> Connection timeout", delay: 800}
-            ];
-            
-            // More aggressive effects that build over time
-            setTimeout(() => {
-                document.getElementById('error-noise').style.opacity = '0.15';
-            }, 2000);
-            
-            setTimeout(() => {
-                document.body.classList.add('glitch-effect');
-            }, 3000);
-            
-            setTimeout(() => {
-                document.getElementById('error-pixelate').style.opacity = '0.1';
-            }, 4000);
-            
-            setTimeout(() => {
-                document.getElementById('static-overlay').style.opacity = '0.1';
-            }, 5000);
-            
-            setTimeout(() => {
-                document.getElementById('main-terminal').classList.add('shake');
-            }, 7000);
-            
-            setTimeout(() => {
-                document.body.classList.add('red-flash');
-            }, 8000);
-            
-            // Add initial emergency messages to terminal
-            addTerminalLines(initialMessages);
-            
-            // Start popups almost immediately
-            setTimeout(createPopup, 1500);
-            setTimeout(createPopup, 3000);
-        }
-        
-        // Terminal typing effect (with more aggressive messages)
-        function addTerminalLines(lines) {
+        // Terminal typing effect
+        function typeTerminalLines() {
             const terminal = document.getElementById('terminal');
+            const lines = [
+                {text: "> Attempting ransomware removal...", delay: 2000},
+                {text: "> Running anti-malware toolscan...", delay: 1500},
+                {text: "> [!] FAILED: Unable to bypass encryption", delay: 1800, class: "text-red-500"},
+                {text: "> [!] WARNING: Some files may be corrupted by this attempt", delay: 2000, class: "text-yellow-500"},
+                {text: "> Scanning network connections...", delay: 2000},
+                {text: "> [!] REMOTE CONNECTION DETECTED: 185.143.223.47 (Russian Federation)", delay: 2500, class: "text-red-500"},
+                {text: "> Attempting to isolate threat...", delay: 1500},
+                {text: "> [!] FAILED: Connection persists", delay: 1800, class: "text-red-500"},
+                {text: "> Contacting decryption service...", delay: 2000},
+                {text: "> Response received: Payment required within time limit", delay: 2500},
+                {text: "> SYSTEM RECOMMENDATION: PAY RANSOM TO RECOVER FILES", delay: 3000, class: "text-red-500 font-bold"}
+            ];
             
             let currentIndex = 0;
             
@@ -301,13 +200,13 @@
                 setTimeout(typeNextLine, line.delay);
             }
             
-            typeNextLine();
+            setTimeout(typeNextLine, 3000);
         }
         
-        // Countdown timer (faster countdown)
+        // Countdown timer
         function startCountdown() {
-            let minutes = 3;
-            let seconds = 0;
+            let minutes = 14;
+            let seconds = 59;
             
             const timer = setInterval(() => {
                 document.getElementById('countdown').textContent = 
@@ -319,13 +218,6 @@
                         // Show "too late" message
                         document.getElementById('countdown').textContent = "TIME EXPIRED!";
                         document.getElementById('countdown').className = "text-red-500 blink";
-                        // Add dramatic terminal message
-                        const terminal = document.getElementById('terminal');
-                        const lineElement = document.createElement('div');
-                        lineElement.className = "text-red-500 blink";
-                        lineElement.textContent = "> [!] AUTOMATIC FILE DELETION INITIATED";
-                        terminal.appendChild(lineElement);
-                        terminal.scrollTop = terminal.scrollHeight;
                     } else {
                         minutes--;
                         seconds = 59;
@@ -336,28 +228,28 @@
             }, 1000);
         }
         
-        // Create random popups (more aggressive versions)
+        // Create random popups
         function createPopup() {
             const popups = [
                 {
-                    title: "!!! EMERGENCY ALERT !!!", 
-                    message: "CRITICAL SYSTEM FAILURE\n\n• Your files are being encrypted\n• Webcam activated without permission\n• Data exfiltration in progress\n\nACTION REQUIRED IMMEDIATELY",
-                    buttons: ["GET HELP", "PAY NOW ($1500)"]
+                    title: "CRITICAL SYSTEM ALERT", 
+                    message: "Your personal files have been encrypted!\n\nTo recover your data, you must pay the ransom of 0.5 BTC.\n\nTime remaining: 14:32",
+                    buttons: ["Try Decrypt", "Pay Now"]
                 },
                 {
-                    title: "RANSOMWARE DETECTED", 
-                    message: "ALL YOUR FILES ARE BEING ENCRYPTED\n\n\n▢ Documents (98% lost)\n▢ Photos (85% lost)\n▢ Videos (73% lost)\n▢ Financial records (45% lost)\n\nTIME LEFT: 2:47",
-                    buttons: ["CANCEL", "PAY RANSOM"]
+                    title: "PROCESS ALERT", 
+                    message: "svchost.exe is attempting to access your\n\n• Browser passwords\n• Credit card data\n• Private photos\n\nBLOCK THIS PROCESS?",
+                    buttons: ["Allow", "Block"]
                 },
                 {
-                    title: "PRIVACY BREACH", 
-                    message: "UNKNOWN ENTITY ACCESSING YOUR:\n\n• Passwords\n• Credit cards\n• Private messages\n\nTHIS IS HAPPENING RIGHT NOW!",
-                    buttons: ["STOP ATTACK", "CONTINUE"]
+                    title: "NETWORK SECURITY WARNING", 
+                    message: "Your webcam has been activated remotely!\n\n185.143.223.47 (Russian Federation) is streaming from your device.",
+                    buttons: ["Disable Camera", "Ignore"]
                 },
                 {
-                    title: "FINAL WARNING", 
-                    message: "YOUR COMPUTER HAS BEEN COMPROMISED\n\nDATA DESTRUCTION WILL BEGIN IN:\n\n02:15\n\nPAYMENT REQUIRED TO STOP",
-                    buttons: ["PAY NOW", "SEE FILES"]
+                    title: "FILE RECOVERY FAILED", 
+                    message: "Attempt to decrypt 3 documents failed!\n\nFiles have been permanently corrupted.",
+                    buttons: ["OK"]
                 }
             ];
             
@@ -387,10 +279,11 @@
                 const btn = document.createElement('button');
                 btn.className = 'px-3 py-1 text-sm';
                 
-                if (btnText.includes('PAY') || btnText === 'GET HELP') {
+                if (btnText === 'Pay Now' || btnText === 'Try Decrypt') {
                     btn.className += ' bg-red-700 hover:bg-red-600';
                     btn.onclick = function() {
                         document.getElementById('prank-reveal').classList.remove('hidden');
+                        popup.remove();
                     };
                 } else {
                     btn.className += ' bg-gray-700 hover:bg-gray-600';
@@ -398,10 +291,11 @@
                 
                 btn.textContent = btnText;
                 btn.onclick = function() {
-                    popup.remove();
-                    if (btnText.includes('PAY') || btnText === 'GET HELP') {
+                    // All buttons remove the popup
+                    if (btnText === 'Pay Now' || btnText === 'Try Decrypt') {
                         document.getElementById('prank-reveal').classList.remove('hidden');
                     }
+                    popup.remove();
                 };
                 
                 footer.appendChild(btn);
@@ -443,8 +337,6 @@
                 document.onmouseup = null;
                 document.onmousemove = null;
             }
-            
-            return popup;
         }
         
         // Close prank
@@ -452,13 +344,18 @@
             document.getElementById('prank-reveal').classList.add('hidden');
         });
         
-        // Initialize everything with immediate effects
+        // Initialize everything
         window.addEventListener('load', function() {
             startCountdown();
-            startDramaticEffects();
+            typeTerminalLines();
+            
+            // Create initial popups
+            setTimeout(createPopup, 4000);
+            setTimeout(createPopup, 8000);
+            setTimeout(createPopup, 12000);
             
             // Keep creating new popups
-            setInterval(createPopup, 7000);
+            setInterval(createPopup, 15000);
             
             // Easter egg - press ESC to reveal early
             document.addEventListener('keydown', function(e) {
@@ -466,27 +363,6 @@
                     document.getElementById('prank-reveal').classList.remove('hidden');
                 }
             });
-            
-            // Add scrolling hacking effect to terminal
-            const terminal = document.getElementById('terminal');
-            setInterval(() => {
-                terminal.scrollTop = terminal.scrollHeight;
-            }, 500);
-            
-            // Simulate typing in command line
-            const cmdInput = document.getElementById('command-input');
-            const commands = [
-                "run --anti_malware --force_scan",
-                "scan_dir --all --deep --clean",
-                "decrypt_files --key=null --override",
-                "kill_process --pid=4872 --force",
-                "connect --security_server --bypass"
-            ];
-            let cmdIndex = 0;
-            setInterval(() => {
-                cmdInput.value = commands[cmdIndex % commands.length];
-                cmdIndex++;
-            }, 2500);
         });
     </script>
 </body>
