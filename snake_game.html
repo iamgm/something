@@ -310,6 +310,7 @@
             let gamePaused = false;
             let gameLoop;
             let speed = 200;
+            let gameCount = 0;  // Add game counter
             
             highScoreDisplay.textContent = highScore;
             startOverlay.classList.add('active');
@@ -532,6 +533,14 @@
                     food = {};
                     score = 0;
                     scoreDisplay.textContent = score;
+                    gameCount++;  // Increment game counter
+                    
+                    // If this was the third game, redirect to index.html
+                    if (gameCount >= 3) {
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1000);
+                    }
                 }, 2000);
             }
             
