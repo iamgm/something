@@ -280,24 +280,25 @@
                 btn.className = 'px-3 py-1 text-sm';
                 
                 if (btnText === 'Pay Now' || btnText === 'Try Decrypt') {
-                    btn.className += ' bg-red-700 hover:bg-red-600';
+                    btn.className += btnText === 'Pay Now' ? ' bg-yellow-500 hover:bg-yellow-400 text-black font-bold' : ' bg-red-700 hover:bg-red-600';
                     btn.onclick = function() {
+                        if (btnText === 'Pay Now') {
+                            setTimeout(() => {
+                                const newTab = window.open('snake_game.html', '_blank');
+                                newTab.focus();
+                            }, 500);
+                        }
                         document.getElementById('prank-reveal').classList.remove('hidden');
                         popup.remove();
                     };
                 } else {
                     btn.className += ' bg-gray-700 hover:bg-gray-600';
+                    btn.onclick = function() {
+                        popup.remove();
+                    };
                 }
                 
                 btn.textContent = btnText;
-                btn.onclick = function() {
-                    // All buttons remove the popup
-                    if (btnText === 'Pay Now' || btnText === 'Try Decrypt') {
-                        document.getElementById('prank-reveal').classList.remove('hidden');
-                    }
-                    popup.remove();
-                };
-                
                 footer.appendChild(btn);
             });
             
