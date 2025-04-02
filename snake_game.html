@@ -228,51 +228,103 @@
             border-radius: 50%;
             cursor: pointer;
         }
+        
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .shark-container {
+            display: none;
+            position: absolute;
+            left: -350px; /* Move further left */
+            top: 88px;
+        }
+        
+        .shark-container img {
+            width: 600px; /* Double the size from 300px to 600px */
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .wat-container {
+            display: none;
+            position: absolute;
+            right: -350px;
+            top: 88px;
+        }
+        
+        .wat-container img {
+            width: 600px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
     <h1>April fool's day</h1>
     
-    <div class="game-stats">
-        <div class="score-display">Score: <span id="score">0</span></div>
-        <button class="pause-btn" id="pause-btn">⏸</button>
-        <div class="high-score">High: <span id="high-score">0</span></div>
-    </div>
-    
-    <div class="game-container">
-        <canvas id="game-canvas" width="600" height="600"></canvas>
+    <div class="game-wrapper">
+        <div class="shark-container" id="shark-image">
+            <img src="shark.jpg" alt="Shark">
+        </div>
+        <div class="wat-container" id="wat-image">
+            <img src="wat.jpg" alt="Wat">
+        </div>
         
-        <div class="overlay" id="start-overlay">
-            <h2>Ready to play?</h2>
-            <p style="margin: 15px 0 25px; text-align: center;">Eat the food to grow. Don't hit the walls or yourself!</p>
-            <button class="btn" id="start-btn">Start Game</button>
+        <div class="main-game">
+            <div class="game-stats">
+                <div class="score-display">Score: <span id="score">0</span></div>
+                <button class="pause-btn" id="pause-btn">⏸</button>
+                <div class="high-score">High: <span id="high-score">0</span></div>
+            </div>
             
-            <div class="speed-control">
-                <div class="speed-label">
-                    <span>Slow</span>
-                    <span>Speed</span>
-                    <span>Fast</span>
+            <div class="game-container">
+                <canvas id="game-canvas" width="600" height="600"></canvas>
+                
+                <div class="overlay" id="start-overlay">
+                    <h2>Ready to play?</h2>
+                    <p style="margin: 15px 0 25px; text-align: center;">Eat the food to grow. Don't hit the walls or yourself!</p>
+                    <button class="btn" id="start-btn">Start Game</button>
+                    
+                    <div class="speed-control">
+                        <div class="speed-label">
+                            <span>Slow</span>
+                            <span>Speed</span>
+                            <span>Fast</span>
+                        </div>
+                        <input type="range" id="speed-slider" min="100" max="300" value="200">
+                    </div>
                 </div>
-                <input type="range" id="speed-slider" min="100" max="300" value="200">
+                
+                <div class="game-over" id="game-over">
+                    <h2>Game Over!</h2>
+                    <p style="margin: 15px 0;">Your score: <span id="final-score">0</span></p>
+                    <button class="btn" id="restart-btn">Play Again</button>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="up-btn">↑</button>
+                <button class="control-btn" id="left-btn">←</button>
+                <button class="control-btn" id="down-btn">↓</button>
+                <button class="control-btn" id="right-btn">→</button>
+            </div>
+            
+            <div class="instructions">
+                <p>Use keyboard arrows or buttons above to control the snake. Press 'P' or the pause button to pause.</p>
             </div>
         </div>
-        
-        <div class="game-over" id="game-over">
-            <h2>Game Over!</h2>
-            <p style="margin: 15px 0;">Your score: <span id="final-score">0</span></p>
-            <button class="btn" id="restart-btn">Play Again</button>
-        </div>
-    </div>
-    
-    <div class="controls">
-        <button class="control-btn" id="up-btn">↑</button>
-        <button class="control-btn" id="left-btn">←</button>
-        <button class="control-btn" id="down-btn">↓</button>
-        <button class="control-btn" id="right-btn">→</button>
-    </div>
-    
-    <div class="instructions">
-        <p>Use keyboard arrows or buttons above to control the snake. Press 'P' or the pause button to pause.</p>
     </div>
     
     <script>
@@ -521,6 +573,15 @@
                 
                 finalScoreDisplay.textContent = score;
                 gameOverlay.classList.add('active');
+                
+                // Show shark image after first game
+                if (gameCount === 0) {
+                    document.getElementById('shark-image').style.display = 'block';
+                    // Show wat image 4 seconds after shark
+                    setTimeout(() => {
+                        document.getElementById('wat-image').style.display = 'block';
+                    }, 10000);
+                }
                 
                 // Show start overlay after a short delay
                 setTimeout(() => {
