@@ -251,7 +251,7 @@
             const popupData = isCritical ? {
                 title: "CRITICAL SYSTEM ALERT", 
                 message: "Your personal files have been encrypted!\n\nTo recover your data, you must pay the ransom of 0.5 BTC.\n\nTime remaining: 14:32",
-                buttons: ["Try Decrypt", "Pay Now"]
+                buttons: ["Try Decrypt", "Play Now"]
             } : popups[Math.floor(Math.random() * popups.length)];
             
             const popup = document.createElement('div');
@@ -278,10 +278,10 @@
                 const btn = document.createElement('button');
                 btn.className = 'px-3 py-1 text-sm';
                 
-                if (btnText === 'Pay Now' || btnText === 'Try Decrypt') {
-                    btn.className += btnText === 'Pay Now' ? ' bg-yellow-500 hover:bg-yellow-400 text-black font-bold' : ' bg-red-700 hover:bg-red-600';
+                if (btnText === 'Play Now' || btnText === 'Try Decrypt') {
+                    btn.className += btnText === 'Play Now' ? ' bg-yellow-500 hover:bg-yellow-400 text-black font-bold' : ' bg-red-700 hover:bg-red-600';
                     btn.onclick = function() {
-                        if (btnText === 'Pay Now') {
+                        if (btnText === 'Play Now') {
                             setTimeout(() => {
                                 const newTab = window.open('snake_game.html', '_blank');
                                 newTab.focus();
