@@ -264,6 +264,34 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         
+        .cry-container {
+            display: none;
+            position: absolute;
+            left: -350px;
+            bottom: 20px;  /* Position at bottom */
+        }
+        
+        .cry-container img {
+            width: 600px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rob-container {
+            display: none;
+            position: absolute;
+            right: -350px;
+            bottom: 20px;  /* Position at bottom */
+        }
+        
+        .rob-container img {
+            width: 600px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
         .main-game {
             display: flex;
             flex-direction: column;
@@ -280,6 +308,12 @@
         </div>
         <div class="wat-container" id="wat-image">
             <img src="wat.jpg" alt="Wat">
+        </div>
+        <div class="cry-container" id="cry-image">
+            <img src="cry.jpg" alt="Cry">
+        </div>
+        <div class="rob-container" id="rob-image">
+            <img src="rob.jpg" alt="Rob">
         </div>
         
         <div class="main-game">
@@ -577,9 +611,21 @@
                 // Show shark image after first game
                 if (gameCount === 0) {
                     document.getElementById('shark-image').style.display = 'block';
-                    // Show wat image 4 seconds after shark
+                    // Show wat image 10 seconds after shark
                     setTimeout(() => {
                         document.getElementById('wat-image').style.display = 'block';
+                        // Show cry image 2.5 seconds after wat
+                        setTimeout(() => {
+                            document.getElementById('cry-image').style.display = 'block';
+                            // Show rob image 2.5 seconds after cry
+                            setTimeout(() => {
+                                document.getElementById('rob-image').style.display = 'block';
+                                // Redirect to Hugging Face 3.5 seconds after rob image
+                                setTimeout(() => {
+                                    window.location.href = "https://huggingface.co/spaces/enzostvs/deepsite";
+                                }, 5500);
+                            }, 2500);
+                        }, 2500);
                     }, 10000);
                 }
                 
@@ -594,14 +640,7 @@
                     food = {};
                     score = 0;
                     scoreDisplay.textContent = score;
-                    gameCount++;  // Increment game counter
-                    
-                    // If this was the third game, redirect to index.html
-                    if (gameCount >= 3) {
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 1000);
-                    }
+                    gameCount++;
                 }, 2000);
             }
             
