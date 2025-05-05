@@ -1,2 +1,3 @@
-# code-examples
-small code examples for reference
+# Some random trash 🚮
+
+This is where we will store some random stuff 
